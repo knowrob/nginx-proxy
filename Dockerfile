@@ -24,6 +24,8 @@ RUN mkdir /app
 WORKDIR /app
 ADD . /app
 
+VOLUME /etc/nginx
+
 EXPOSE 80
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
