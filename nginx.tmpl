@@ -1,10 +1,10 @@
-server {
-        listen 80 default_server;
-        server_name _; # This is just an invalid value which will never trigger on a real hostname.
-        error_log /proc/self/fd/2;
-        access_log /proc/self/fd/1;
-        return 503;
-}
+# server {
+#         listen 80 default_server;
+#         server_name _; # This is just an invalid value which will never trigger on a real hostname.
+#         error_log /proc/self/fd/2;
+#         access_log /proc/self/fd/1;
+#         return 503;
+# }
 
 
 # upgrade header for websockets
@@ -18,10 +18,11 @@ map $http_upgrade $connection_upgrade {
 # More information: http://nginx.com/resources/admin-guide/reverse-proxy/
 # 
 server {
+    listen 80 default_server;
     gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
     # external name of the server
-    server_name localhost data.open-ease.org;
+    server_name localhost data.open-ease.org test.example.com;
     proxy_buffering off;
     error_log /proc/self/fd/2;
     access_log /proc/self/fd/1;
@@ -59,6 +60,7 @@ server {
           proxy_http_version 1.1;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
+          include /etc/nginx/proxy_params;
 
           # Path rewriting
           rewrite /ws/{{ $host }}/(.*) /$1 break;
@@ -96,6 +98,7 @@ server {
           proxy_http_version 1.1;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
+          include /etc/nginx/proxy_params;
       }
       {{ end }}      
     {{ end }}
